@@ -1,10 +1,10 @@
 <script>
   import AnaliticsIcon from "./vectors/AnaliticsIcon.svelte";
-  export let index;
+  export let item;
 </script>
 
 <div class="container">
-  <time>{index}</time>
+  <time>{item.totalAmount}</time>
   <span>Information</span>
   <div class="buttons-container">
     <button class="button-primary">Primary</button>

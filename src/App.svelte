@@ -1,15 +1,8 @@
 <script>
-  import { onMount } from "svelte";
-  import ListItem from "./components/ListItem.svelte";
-  import { dataset_1, dataset_2 } from "./data/datasets";
-  import { fakeApi } from "./data/fakeApi";
+  import List from "./components/List.svelte";
   import { DataStore } from "./stores";
 
   $: data = $DataStore;
-  onMount(async () => {
-    const res = await fakeApi(dataset_1, 2000);
-    DataStore.set(res);
-  });
 </script>
 
 <main>
@@ -18,9 +11,11 @@
     <a href="/">View All</a>
   </header>
   <ul>
-    {#each { length: 6 } as item, index}
-      <ListItem {index} />
-    {/each}
+    {#if Object.keys(data).length === 0}
+      <h2>Loading</h2>
+    {:else}
+      <List {data} />
+    {/if}
   </ul>
   <pre>{JSON.stringify(data)}</pre>
 </main>
