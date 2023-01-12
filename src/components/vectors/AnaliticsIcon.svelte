@@ -1,7 +1,8 @@
 <script>
-  export let fill = "#ffffff";
+  export let isActive;
   export let width = 32;
   export let height = 32;
+  const fill = isActive ? "#ffffff" : "#c4c4c4";
 </script>
 
 <svg xmlns="http://www.w3.org/2000/svg" {width} {height} viewBox="0 0 64 64"

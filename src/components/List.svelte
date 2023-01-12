@@ -1,5 +1,6 @@
 <script>
   import ListItem from "./ListItem.svelte";
+  import PendingItem from "./PendingItem.svelte";
 
   export let data;
 
@@ -39,17 +40,27 @@
   };
 
   $: normalizedSettlementsData = normalizeDatalength(data);
-  $: console.log(normalizedSettlementsData);
 </script>
 
 {#each normalizedSettlementsData as item, index (index)}
   {#if isPending(item)}
-    <h2>Pending</h2>
+    <PendingItem />
   {:else if isBlank(item)}
-    <h2>Blank</h2>
+    <div class="container" />
   {:else}
     <ListItem {item} />
   {/if}
 {/each}
 
-<style></style>
+<style>
+  .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--brand-light-gray);
+    border: 1px solid var(--brand-gray);
+    margin: 0.7rem;
+    padding-left: 12px;
+    height: 50px;
+  }
+</style>
