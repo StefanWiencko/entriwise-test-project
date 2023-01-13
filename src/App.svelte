@@ -26,6 +26,9 @@
     {:else}
       <List {data} />
     {/if}
+    <!-- {#each { length: 6 } as { }}
+      <PendingItem />
+    {/each} -->
   </ul>
 </main>
 

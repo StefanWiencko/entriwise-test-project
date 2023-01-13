@@ -1,6 +1,7 @@
 <script>
   import AnaliticsIcon from "./vectors/AnaliticsIcon.svelte";
   import { useListItem } from "../hooks/useListItem";
+  import TriangleWarning from "./vectors/TriangleWarning.svelte";
 
   export let item;
   const {
@@ -28,28 +29,37 @@
 
 <div class="container">
   {#if item.financialEventGroupId}
-    <a href={linkHref}><time>{dateString}</time></a>
-  {:else}<time>{dateString}</time>
+    <a href={linkHref}>
+      <time>{dateString}</time>
+    </a>
+  {:else}
+    <time>{dateString}</time>
   {/if}
 
-  <span class={`${action === "fully-imported" ? "fully-imported" : ""}`}
-    >{infoText}</span
-  >
+  <span class={`info-text ${action}`}>
+    {infoText}
+    {#if action === "incomplete-import"}
+      <TriangleWarning fill={"#f46474"} margin="0 0 0 5px" />
+    {/if}
+  </span>
   <div class="buttons-container">
     <button
       disabled={primaryButtonStatus === "disabled"}
       class={`button-primary ${primaryButtonStatus}`}
-      on:click={primaryBtnHandler}
-      >{primaryButtonStatus === "disabled"
-        ? "Import"
-        : capitalized(primaryButtonStatus)}</button
+      on:click|preventDefault={primaryBtnHandler}
     >
+      {primaryButtonStatus === "disabled"
+        ? "Import"
+        : capitalized(primaryButtonStatus)}
+    </button>
     <button
       disabled={!isSecondaryBtnActive}
       class={`button-secondary ${isSecondaryBtnActive ? "" : "disabled"}`}
-      on:click={() => console.log("Analitics button was clicked !")}
-      ><AnaliticsIcon isActive={isSecondaryBtnActive} /></button
+      on:click|preventDefault={() =>
+        console.log("Analitics button was clicked !")}
     >
+      <AnaliticsIcon isActive={isSecondaryBtnActive} />
+    </button>
   </div>
 </div>
 
@@ -75,22 +85,32 @@
     border-radius: 0;
     font-size: 0.9rem;
   }
-  button:active {
-    opacity: 0.8;
-  }
+
   .button-primary {
     color: #fff;
     background-color: var(--brand-red);
     width: 80px;
+  }
+  .button-primary:active {
+    opacity: 0.7;
+    background-color: var(--brand-red);
   }
 
   .button-secondary {
     background-color: var(--brand-blue);
     width: 50px;
   }
+  .button-secondary:active {
+    background-color: var(--brand-blue);
+    opacity: 0.7;
+  }
 
   .import {
     background-color: var(--brand-yellow);
+  }
+  .import:active {
+    background-color: var(--brand-yellow);
+    opacity: 0.7;
   }
   .disabled {
     background-color: var(--brand-medium-gray);
@@ -101,7 +121,39 @@
     opacity: 1;
     background: var(--brand-medium-gray);
   }
+  .info-text {
+    position: relative;
+  }
   .fully-imported {
     color: var(--brand-blue);
+  }
+  .incomplete-import {
+    display: flex;
+    align-items: center;
+  }
+  .fetching-events::after {
+    content: " .";
+    position: absolute;
+    right: -5px;
+    animation: dots 1s steps(5, end) infinite;
+  }
+  @keyframes dots {
+    0%,
+    20% {
+      color: #333;
+      text-shadow: 0.25em 0 0 #333, 0.5em 0 0 #333;
+    }
+    40% {
+      color: var(--brand-light-gray);
+      text-shadow: 0.25em 0 0 #333, 0.5em 0 0 #333;
+    }
+    60% {
+      text-shadow: 0.25em 0 0 var(--brand-light-gray), 0.5em 0 0 #333;
+    }
+    80%,
+    100% {
+      text-shadow: 0.25em 0 0 var(--brand-light-gray),
+        0.5em 0 0 var(--brand-light-gray);
+    }
   }
 </style>

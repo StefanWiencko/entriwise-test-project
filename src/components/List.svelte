@@ -7,7 +7,8 @@
   let countPendingItems = 0;
 
   const isPending = (item) => {
-    const statement = item === null && data.pendingCount !== countPendingItems;
+    const statement =
+      item === undefined && data.pendingCount !== countPendingItems;
     if (statement) {
       countPendingItems += 1;
       return statement;
@@ -16,9 +17,8 @@
   };
 
   const isBlank = (item) => {
-    console.log(data.pendingCount === countPendingItems, countPendingItems);
     return (
-      item === null &&
+      item === undefined &&
       (data.pendingCount === 0 || data.pendingCount === countPendingItems)
     );
   };
@@ -26,13 +26,6 @@
   const normalizeDatalength = (data) => {
     const settlements = data.settlements;
 
-    console.log(settlements);
-    if (settlements.length < 6) {
-      while (settlements.length < 6) {
-        settlements.push(null);
-      }
-      return settlements;
-    }
     if (settlements.length > 5) {
       return settlements.splice(0, 6);
     }
@@ -42,15 +35,14 @@
   $: normalizedSettlementsData = normalizeDatalength(data);
 </script>
 
-{#each normalizedSettlementsData as item, index (index)}
-  {#if isPending(item)}
+{#each { length: 6 } as _, index}
+  {#if isPending(normalizedSettlementsData[index])}
     <PendingItem />
-  {:else if isBlank(item)}
+  {:else if isBlank(normalizedSettlementsData[index])}
     <div class="container" />
   {:else}
-    <ListItem {item} />
-  {/if}
-{/each}
+    <ListItem item={normalizedSettlementsData[index]} />
+  {/if}{/each}
 
 <style>
   .container {

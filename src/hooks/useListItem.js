@@ -1,4 +1,4 @@
-export const generateStatus = (data) => {
+const generateStatus = (data) => {
   const {
     importedAmount,
     importedIgnoredAmount,
@@ -8,6 +8,7 @@ export const generateStatus = (data) => {
     planUpgradeNeeded,
     covered,
   } = data;
+
   if (
     typeof totalAmount !== "undefined" &&
     typeof importedAmount !== "undefined" &&
@@ -40,6 +41,7 @@ export const generateStatus = (data) => {
 
 export const useListItem = (data) => {
   const action = generateStatus(data);
+
   const infoText = {
     "not-imported": "Open",
     "fully-imported": `$${data.totalAmount}`,
@@ -48,6 +50,7 @@ export const useListItem = (data) => {
     buy: "No subscription",
     "incomplete-import": "Incomplete",
   };
+
   const primaryButtonStatus = {
     "not-imported": "import",
     "fully-imported": "disabled",
@@ -56,14 +59,17 @@ export const useListItem = (data) => {
     buy: "buy",
     "incomplete-import": "import",
   };
+
   const isSecondaryBtnActive =
     action === "fully-imported" || action === "incomplete-import";
+
   const primaryBtnHandlers = {
     "not-imported": () => console.log("Import button was clicked !"),
     "incomplete-import": () => console.log("Import button was clicked !"),
     upgrade: () => console.log("Upgrade button was clicked !"),
     buy: () => console.log("Buy button was clicked !"),
   };
+
   return {
     action,
     infoText: infoText[action],
