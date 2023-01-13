@@ -176,8 +176,6 @@
     background-color: #333;
     color: #fff;
     pointer-events: none;
-    /* transition: 0.25s all ease;
-    transition-delay: 0.25s; */
     overflow: visible;
     border-radius: 5px;
   }

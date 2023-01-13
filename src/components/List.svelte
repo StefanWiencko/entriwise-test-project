@@ -42,7 +42,8 @@
     <div class="container" />
   {:else}
     <ListItem item={normalizedSettlementsData[index]} />
-  {/if}{/each}
+  {/if}
+{/each}
 
 <style>
   .container {
