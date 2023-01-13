@@ -4,6 +4,7 @@
   import TriangleWarning from "./vectors/TriangleWarning.svelte";
 
   export let item;
+
   const {
     action,
     infoText,
@@ -11,29 +12,34 @@
     primaryButtonStatus,
     primaryBtnHandler,
   } = useListItem(item);
+  let isMouseOver = false;
+  let mousePosition = { left: "0px", top: "0px" };
 
-  const startDate = new Date(item.startDate).toLocaleString("en", {
-    month: "short",
-    day: "2-digit",
-  });
+  const handleMousemove = (e) => {
+    const left = `${e.offsetX + 90}${"px"}`;
+    const top = `${e.offsetY - 20}${"px"}`;
+    mousePosition = { left, top };
+  };
 
-  const endDate = new Date(item.endDate).toLocaleString("en", {
-    month: "short",
-    day: "2-digit",
-  });
+  const formatDate = (date) =>
+    new Date(date).toLocaleString("en", {
+      month: "short",
+      day: "2-digit",
+    });
 
+  const toggleMouseOver = () => (isMouseOver = !isMouseOver);
   const capitalized = (word) => word.charAt(0).toUpperCase() + word.slice(1);
-  const dateString = `${startDate} - ${endDate}`;
+  const date = `${formatDate(item.startDate)} - ${formatDate(item.endDate)}`;
   const linkHref = `https://sellercentral.amazon.com/gp/payments-account/view-transactions.html?subview=groups&groupId=${item.financialEventGroupId}`;
 </script>
 
 <div class="container">
   {#if item.financialEventGroupId}
     <a href={linkHref}>
-      <time>{dateString}</time>
+      <time>{date}</time>
     </a>
   {:else}
-    <time>{dateString}</time>
+    <time>{date}</time>
   {/if}
 
   <span class={`info-text ${action}`}>
@@ -53,6 +59,13 @@
         : capitalized(primaryButtonStatus)}
     </button>
     <button
+      on:mousemove={handleMousemove}
+      on:mouseleave={() => {
+        toggleMouseOver();
+      }}
+      on:mouseenter={() => {
+        toggleMouseOver();
+      }}
       disabled={!isSecondaryBtnActive}
       class={`button-secondary ${isSecondaryBtnActive ? "" : "disabled"}`}
       on:click|preventDefault={() =>
@@ -60,6 +73,15 @@
     >
       <AnaliticsIcon isActive={isSecondaryBtnActive} />
     </button>
+    <div
+      style="
+      top:{mousePosition.top}; 
+      left:{mousePosition.left};"
+      class={isMouseOver ? "tooltip" : "tooltip hidden"}
+    >
+      Show Report
+      <div class="tooltip-arrow" />
+    </div>
   </div>
 </div>
 
@@ -76,6 +98,7 @@
   }
   .buttons-container {
     display: flex;
+    position: relative;
     height: 100%;
   }
   button {
@@ -100,6 +123,7 @@
     background-color: var(--brand-blue);
     width: 50px;
   }
+
   .button-secondary:active {
     background-color: var(--brand-blue);
     opacity: 0.7;
@@ -116,6 +140,9 @@
     background-color: var(--brand-medium-gray);
     color: var(--brand-gray);
     border: 1px solid var(--brand-gray);
+  }
+  .hidden {
+    visibility: hidden;
   }
   .disabled:active {
     opacity: 1;
@@ -136,6 +163,34 @@
     position: absolute;
     right: -5px;
     animation: dots 1s steps(5, end) infinite;
+  }
+  .tooltip {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    right: -70px;
+    width: 120px;
+    height: 35px;
+    font-size: 0.9rem;
+    background-color: #333;
+    color: #fff;
+    pointer-events: none;
+    /* transition: 0.25s all ease;
+    transition-delay: 0.25s; */
+    overflow: visible;
+    border-radius: 5px;
+  }
+  .tooltip-arrow {
+    position: absolute;
+    left: -10px;
+    transform: translate(50%, -50%);
+    top: 50%;
+    width: 0;
+    height: 0;
+    border-top: 7px solid transparent;
+    border-bottom: 7px solid transparent;
+    border-right: 7px solid #333;
   }
   @keyframes dots {
     0%,

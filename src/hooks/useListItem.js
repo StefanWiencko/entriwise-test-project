@@ -9,6 +9,7 @@ const generateStatus = (data) => {
     covered,
   } = data;
 
+  // Order based on action priority
   if (
     typeof totalAmount !== "undefined" &&
     typeof importedAmount !== "undefined" &&
